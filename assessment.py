@@ -60,5 +60,105 @@ Part 1: Discussion
 
 # Parts 2 through 5:
 # Create your classes and class methods
+class Student(object):
+   def __init__(self, first_name, last_name, address):
+      self.first_name = first_name
+      self.last_name = last_name
+      self.address = address
+      # self.student_data()
+
+   def __repr__(self):
+      return "{%s: %s,\n %s: %s,\n %s: %s}" %(
+                                                "first_name", self.first_name, 
+                                                "last_name", self.last_name, 
+                                                "address", self.address
+                                                   )
+
+   def store_info(self):
+      student_dict = {
+                     "first_name": self.first_name, 
+                     "last_name": self.last_name, 
+                     "address": self.address
+      }
+      return student_dict
+
+
+class Question(object):
+   def __init__(self, question, correct_answer):
+      self.question = question
+      self.correct_answer = correct_answer
+
+   def __repr__(self):
+      return "{%s: %s,\n %s: %s}" % ("question", self.question, 
+                                    "correct_answer", self.correct_answer)
+
+   def store_question(self, question, correct_answer):
+      question_dict = {
+                        "question": question,
+                        "correct_answer": correct_answer
+                        }
+      return question_dict
+
+   def ask_and_evaluate(self, question, correct_answer):
+      print self.question
+      user_answer = raw_input(">> ")
+      if user_answer == self.correct_answer:
+         return True
+      else:
+         return False
+
+
+class Exam(Question):
+   def __init__(self, name):
+      # super(Exam, self).__init__
+      self.name = name
+      self.questions = []
+
+
+   def __repr__(self):
+      return "{%s: %s,\n %s: %s}" % ("name", self.name, 
+                                    "questions", self.questions)
+
+
+   def store_exam(self):
+      exam_dict = {
+                        "name": self.name,
+                        "questions": self.questions
+                        }
+
+      return exam_dict
+
+
+   def add_question(self, question, correct_answer):
+      new_question = super(Exam, self).store_question(question, correct_answer)
+      self.questions.append(new_question)
+
+
+   def administer(self):
+      score = []
+      for indiv_question in self.questions:
+         self.correct_answer = indiv_question['correct_answer']
+         self.question = indiv_question['question']
+
+         question_score = super(Exam, self).ask_and_evaluate(self.question, self.correct_answer)
+
+         if question_score == True:
+            score.append(1.0)
+         else:
+            score.append(0)
+
+      total = 0
+      for num in score:
+         total += num
+
+      score_average = float(total) / len(score)
+
+      return score_average * 100.0
+
+
+
+
+
+
 
 
