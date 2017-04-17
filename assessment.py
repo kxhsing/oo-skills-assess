@@ -18,7 +18,7 @@ Part 1: Discussion
    (e.g., a child class can inherit from a parent class), which means that the
    different components of code that would have otherwise overlapped can be 
    interchangeable and reused. For example, when a method or attribute is 
-   defined in a parent class, when a child class is created, it automatically 
+   defined in a parent class and a child class is created, it automatically 
    inherits the method and attribute in the parent class, unless it would like 
    to overwrite it. Polymorphism reduces repetition in the code and makes it 
    easy to recycle code without the extra steps of typing them over and over again.
@@ -58,14 +58,13 @@ Part 1: Discussion
 """
 
 
-# Parts 2 through 5:
-# Create your classes and class methods
+##################### PARTS 2 & 3 ############################
+
 class Student(object):
    def __init__(self, first_name, last_name, address):
       self.first_name = first_name
       self.last_name = last_name
       self.address = address
-      # self.student_data()
 
    def __repr__(self):
       return "{%s: %s,\n %s: %s,\n %s: %s}" %(
@@ -75,6 +74,8 @@ class Student(object):
                                                    )
 
    def store_info(self):
+      """Store info about student in dictionary"""
+
       student_dict = {
                      "first_name": self.first_name, 
                      "last_name": self.last_name, 
@@ -93,6 +94,8 @@ class Question(object):
                                     "correct_answer", self.correct_answer)
 
    def store_question(self, question, correct_answer):
+      """Store questions in dictionary format"""
+
       question_dict = {
                         "question": question,
                         "correct_answer": correct_answer
@@ -100,6 +103,8 @@ class Question(object):
       return question_dict
 
    def ask_and_evaluate(self, question, correct_answer):
+      """Evaluate whether user's answer equals correct answer"""
+
       print self.question
       user_answer = raw_input(">> ")
       if user_answer == self.correct_answer:
@@ -110,7 +115,6 @@ class Question(object):
 
 class Exam(Question):
    def __init__(self, name):
-      # super(Exam, self).__init__
       self.name = name
       self.questions = []
 
@@ -121,6 +125,8 @@ class Exam(Question):
 
 
    def store_exam(self):
+      """Store the exam name and its questions in this format"""
+
       exam_dict = {
                         "name": self.name,
                         "questions": self.questions
@@ -130,11 +136,15 @@ class Exam(Question):
 
 
    def add_question(self, question, correct_answer):
+      """Add question to list of questions for exam/quiz"""
+
       new_question = super(Exam, self).store_question(question, correct_answer)
       self.questions.append(new_question)
 
 
    def administer(self):
+      """Administer test and return score in percentage"""
+
       score = []
       for indiv_question in self.questions:
          self.correct_answer = indiv_question['correct_answer']
@@ -156,13 +166,12 @@ class Exam(Question):
 
       return full_score
 
+
+##################### PART 4 ############################
+
+
 class StudentExam(Student, Exam):
    def __init__(self, student, exam):
-      # first_name, last_name, address, name)
-      # super(StudentExam, self).__init__(first_name, last_name, address)
-      # super(StudentExam, self).__init__(name)
-      # self.questions = []
-      # self.name = name
       self.first_name = student.first_name
       self.last_name = student.last_name
       self.address = student.address
@@ -179,11 +188,16 @@ class StudentExam(Student, Exam):
                                                    )
 
    def take_test(self):
+      """Calls on super class Exam's administer method to take test and print score"""
+
       self.score = super(StudentExam, self).administer()
       print "You scored: ", self.score
 
 
 def example():
+   """Create example of a Student Exam that takes instances of Exam and Student 
+   as input and administers exam"""
+
    final = Exam("Final")
    final.add_question("What color is the Golden Gate Bridge?", "International Orange")
    final.add_question("How many lights are there on the Bay Bridge?", "25,000")
@@ -198,6 +212,72 @@ def example():
 
    stud_exam.take_test()
 
+# example()
+
+
+##################### PART 5 ############################
+
+
+class Quiz(Exam):
+   def __init__(self, name):
+      super(Quiz, self).__init__(name)
+
+   def __repr__(self):
+      return super(Quiz, self).__repr__()
+
+   def administer(self):
+      score = super(Quiz, self).administer()
+
+      if score >= 50.0:
+         return 1      
+      else:
+         return 0
+
+
+class StudentQuiz(Student, Quiz):
+   def __init__(self, student, quiz):
+      self.first_name = student.first_name
+      self.last_name = student.last_name
+      self.address = student.address
+      self.name = quiz.name
+      self.questions = quiz.questions
+
+
+   def __repr__(self):
+      return "{%s: %s,\n %s: %s,\n %s: %s,\n %s: %s}" % (
+                                                "first_name", self.first_name, 
+                                                "last_name", self.last_name, 
+                                                "address", self.address,
+                                                "quiz", self.name
+                                                   )
+
+   def take_test(self):
+      """Calls on super class Exam's administer method to take test and print score"""
+
+      self.score = super(StudentQuiz, self).administer()
+      print self.score
+
+
+
+
+# def pop_quiz_ex():
+#    """Create example of a Student Quiz that takes instances of Quiz and Student 
+#    as input and administers exam"""
+
+#    pop_quiz = Quiz("Pop Quiz")
+#    pop_quiz.add_question("Who designed the Bay Lights?", "Leo Villareal")
+#    pop_quiz.add_question("What do you call a jack rabbit with horns?", "Jackelope")
+#    pop_quiz.add_question("What is a baby kangaroo called?", "Joey")
+#    pop_quiz.add_question("Rough estimate of SF in miles?", "49")
+
+#    jessie = Student("Jessie", "Mora", "600 Sacramento St.")
+
+#    stud_quiz = StudentQuiz(jessie, pop_quiz)
+
+#    stud_quiz.take_test()
+
+
+# pop_quiz_ex()
 
 
 
