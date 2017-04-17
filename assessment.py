@@ -152,13 +152,53 @@ class Exam(Question):
          total += num
 
       score_average = float(total) / len(score)
+      full_score = score_average * 100.0
 
-      return score_average * 100.0
+      return full_score
+
+class StudentExam(Student, Exam):
+   def __init__(self, student, exam):
+      # first_name, last_name, address, name)
+      # super(StudentExam, self).__init__(first_name, last_name, address)
+      # super(StudentExam, self).__init__(name)
+      # self.questions = []
+      # self.name = name
+      self.first_name = student.first_name
+      self.last_name = student.last_name
+      self.address = student.address
+      self.name = exam.name
+      self.questions = exam.questions
+
+
+   def __repr__(self):
+      return "{%s: %s,\n %s: %s,\n %s: %s,\n %s: %s}" %(
+                                                "first_name", self.first_name, 
+                                                "last_name", self.last_name, 
+                                                "address", self.address,
+                                                "exam", self.name
+                                                   )
+
+   def take_test(self):
+      self.score = super(StudentExam, self).administer()
+      print "You scored: ", self.score
+
+
+def example():
+   final = Exam("Final")
+   final.add_question("What color is the Golden Gate Bridge?", "International Orange")
+   final.add_question("How many lights are there on the Bay Bridge?", "25,000")
+   final.add_question("What is the capital of Taiwan?", "Taipei")
+   final.add_question("Which anniversary was it this year for the Sonoma International Film Festival?", "20th")
+   final.add_question("What's the name of Klay Thompson's dog?", "Rocco")
+
+   karen = Student("Karen", "Hsing", "1567 25th Ave")
+
+
+   stud_exam = StudentExam(karen, final)
+
+   stud_exam.take_test()
 
 
 
 
-
-
-
-
+   
